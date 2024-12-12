@@ -2,12 +2,19 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics.Contracts;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net.Http.Headers;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Microsoft.Win32.SafeHandles;
+using Newtonsoft.Json.Linq;
+using SurveyMonkey;
+using SurveyMonkey.Containers;
 
 namespace QuizTrainingReport
 {
@@ -18,6 +25,7 @@ namespace QuizTrainingReport
             InitializeComponent();
         }
         DataTable table = new DataTable();
+        
         private void lblTo_Click(object sender, EventArgs e)
         {
 
@@ -25,11 +33,11 @@ namespace QuizTrainingReport
 
         private void ResultPage_Load(object sender, EventArgs e)
         {
-            table.Columns.Add("ID", typeof(int));
-            table.Columns.Add("Name", typeof(String));
-            table.Columns.Add("Age", typeof(int));
+            //table.Columns.Add("ID", typeof(int));
+            //table.Columns.Add("Name", typeof(String));
+            //table.Columns.Add("Age", typeof(int));
 
-            dataGridView1.DataSource = table;
+            //dataGridView1.DataSource = table;
         }
 
         private void btnExport_Click(object sender, EventArgs e)
@@ -44,31 +52,62 @@ namespace QuizTrainingReport
             Microsoft.Office.Interop.Excel.Worksheet worksheet;
             object miseddata = System.Reflection.Missing.Value;
             workbook = xlapp.Workbooks.Add(miseddata);
+            worksheet = (Microsoft.Office.Interop.Excel.Worksheet)workbook.Worksheets.get_Item(1);
+
+            // Write column headers to the Excel worksheet
+            for (int i = 0; i < dataGridView1.Columns.Count; i++)
+            {
+                worksheet.Cells[1, i+2] = dataGridView1.Columns[i].HeaderText;
+            }
 
             worksheet = (Microsoft.Office.Interop.Excel.Worksheet)workbook.Worksheets.get_Item(1);
-            Microsoft.Office.Interop.Excel.Range xlr = (Microsoft.Office.Interop.Excel.Range)worksheet.Cells[1, 1];
+            Microsoft.Office.Interop.Excel.Range xlr = (Microsoft.Office.Interop.Excel.Range)worksheet.Cells[2, 1];
             xlr.Select();
 
             worksheet.PasteSpecial(xlr, Type.Missing, Type.Missing, Type.Missing, true);
         }
-
-        private void btnSearch_Click(object sender, EventArgs e)
+        
+        private async void btnSearch_Click(object sender, EventArgs e)
         {
-            String[] lines = File.ReadAllLines(@"C:\Users\Joel.Santhana\Desktop\csBeginner\basic\exportExcel\table.txt");
-            String[] values;
+            var client = new HttpClient();
+            client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "fE6kbS5hk-qpNXBhMQm.uqzy9sXLrbwS804TMyqnNxrARydIp4shkZPIZfjHz.orCrc3g.Qj1JcVmQVTOYHB8BPLGTk9N-uu6IGSXMPrv2XKbTcEPqsTIohaok1un5sv");
 
-            for (int i = 0; i < lines.Length; i++)
+            try
             {
-                values = lines[i].Split('/');
-                string[] row = new string[values.Length];
+                HttpResponseMessage response = await client.GetAsync("https://api.surveymonkey.com/v3/surveys/519696776/responses/118687483059/details");
+                string responseBody = await response.Content.ReadAsStringAsync();
+                //MessageBox.Show(responseBody);
 
-                for (int j = 0; j < values.Length; j++)
-                {
-                    row[j] = values[j].Trim();
-                }
+                JObject jsonObj = JObject.Parse(responseBody);
+                var quizResults = jsonObj["quiz_results"];
 
-                table.Rows.Add(row);
+                DataTable dataTable = new DataTable();
+                dataTable.Columns.Add("Correct");
+                dataTable.Columns.Add("Incorrect");
+                dataTable.Columns.Add("Partially Correct");
+                dataTable.Columns.Add("Total Questions");
+                dataTable.Columns.Add("Score");
+                dataTable.Columns.Add("Total Score");
+
+                DataRow row = dataTable.NewRow();
+                row["Correct"] = quizResults["correct"];
+                row["Incorrect"] = quizResults["incorrect"];
+                row["Partially Correct"] = quizResults["partially_correct"];
+                row["Total Questions"] = quizResults["total_questions"];
+                row["Score"] = quizResults["score"];
+                row["Total Score"] = quizResults["total_score"];
+                dataTable.Rows.Add(row);
+
+                dataGridView1.DataSource = dataTable;
+
+                //File.WriteAllText("quiz_result.csv", csv);
             }
+            catch (HttpRequestException ex)
+            {
+                Console.WriteLine($"Request error:{ex.Message}");
+            }
+
         }
     }
 }

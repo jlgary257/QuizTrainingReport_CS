@@ -66,7 +66,7 @@ namespace QuizTrainingReport
 
             worksheet.PasteSpecial(xlr, Type.Missing, Type.Missing, Type.Missing, true);
         }
-        
+
         private async void btnSearch_Click(object sender, EventArgs e)
         {
             var client = new HttpClient();
@@ -75,39 +75,42 @@ namespace QuizTrainingReport
 
             try
             {
-                HttpResponseMessage response = await client.GetAsync("https://api.surveymonkey.com/v3/surveys/519696776/responses/118687483059/details");
+                HttpResponseMessage response = await client.GetAsync("https://api.surveymonkey.com/v3/surveys/");
                 string responseBody = await response.Content.ReadAsStringAsync();
-                //MessageBox.Show(responseBody);
+
+                // Print the entire JSON response
+                Console.WriteLine(responseBody);
 
                 JObject jsonObj = JObject.Parse(responseBody);
-                var quizResults = jsonObj["quiz_results"];
+                JArray quizResults = (JArray)jsonObj["data"];
+
+                // Print the structure of quizResults
+                Console.WriteLine(quizResults.ToString());
 
                 DataTable dataTable = new DataTable();
-                dataTable.Columns.Add("Correct");
-                dataTable.Columns.Add("Incorrect");
-                dataTable.Columns.Add("Partially Correct");
-                dataTable.Columns.Add("Total Questions");
-                dataTable.Columns.Add("Score");
-                dataTable.Columns.Add("Total Score");
+                dataTable.Columns.Add("ID");
+                dataTable.Columns.Add("Title");
+                dataTable.Columns.Add("Survey Monkey Link");
 
-                DataRow row = dataTable.NewRow();
-                row["Correct"] = quizResults["correct"];
-                row["Incorrect"] = quizResults["incorrect"];
-                row["Partially Correct"] = quizResults["partially_correct"];
-                row["Total Questions"] = quizResults["total_questions"];
-                row["Score"] = quizResults["score"];
-                row["Total Score"] = quizResults["total_score"];
-                dataTable.Rows.Add(row);
+                foreach (var result in quizResults)
+                {
+                    DataRow row = dataTable.NewRow();
+                    row["ID"] = result["id"];
+                    row["Title"] = result["title"];
+                    row["Survey Monkey Link"] = result["href"];
+                    dataTable.Rows.Add(row);
+                }
 
                 dataGridView1.DataSource = dataTable;
-
-                //File.WriteAllText("quiz_result.csv", csv);
             }
             catch (HttpRequestException ex)
             {
-                Console.WriteLine($"Request error:{ex.Message}");
+                Console.WriteLine($"Request error: {ex.Message}");
             }
-
+            catch (Exception ex)
+            {
+                Console.WriteLine($"General error: {ex.Message}");
+            }
         }
     }
 }

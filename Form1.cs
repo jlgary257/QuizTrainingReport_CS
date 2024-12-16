@@ -58,7 +58,7 @@ namespace QuizTrainingReport
             for (int i = 0; i < dataGridView1.Columns.Count; i++)
             {
                 worksheet.Cells[1, i+2] = dataGridView1.Columns[i].HeaderText;
-            }
+            }//done by Joel Gary, intern at UCT
 
             worksheet = (Microsoft.Office.Interop.Excel.Worksheet)workbook.Worksheets.get_Item(1);
             Microsoft.Office.Interop.Excel.Range xlr = (Microsoft.Office.Interop.Excel.Range)worksheet.Cells[2, 1];

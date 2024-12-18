@@ -15,6 +15,7 @@ using Microsoft.Win32.SafeHandles;
 using Newtonsoft.Json.Linq;
 using SurveyMonkey;
 using SurveyMonkey.Containers;
+using System.Runtime.InteropServices;
 
 namespace QuizTrainingReport
 {
@@ -83,6 +84,7 @@ namespace QuizTrainingReport
 
                 JObject jsonObj = JObject.Parse(responseBody);
                 JArray quizResults = (JArray)jsonObj["data"];
+                List<string> idList = new List<string>();
 
                 // Print the structure of quizResults
                 Console.WriteLine(quizResults.ToString());
@@ -99,7 +101,11 @@ namespace QuizTrainingReport
                     row["Title"] = result["title"];
                     row["Survey Monkey Link"] = result["href"];
                     dataTable.Rows.Add(row);
+
+                    idList.Add((string)result["id"]);
                 }
+                static_id_arr.id_ar = idList;
+
 
                 dataGridView1.DataSource = dataTable;
             }
@@ -111,6 +117,18 @@ namespace QuizTrainingReport
             {
                 Console.WriteLine($"General error: {ex.Message}");
             }
+        }
+        public static class static_id_arr
+        {
+            public static List<string> id_ar;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Participant participant = new Participant();
+            participant.Show();
+
+            this.Hide();
         }
     }
 }

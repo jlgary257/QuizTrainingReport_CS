@@ -36,6 +36,7 @@
             this.lblTo = new System.Windows.Forms.Label();
             this.btnSearch = new System.Windows.Forms.Button();
             this.btnExport = new System.Windows.Forms.Button();
+            this.btnPart = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -96,7 +97,7 @@
             // 
             // btnSearch
             // 
-            this.btnSearch.Location = new System.Drawing.Point(742, 504);
+            this.btnSearch.Location = new System.Drawing.Point(620, 504);
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.Size = new System.Drawing.Size(87, 34);
             this.btnSearch.TabIndex = 6;
@@ -106,7 +107,7 @@
             // 
             // btnExport
             // 
-            this.btnExport.Location = new System.Drawing.Point(913, 504);
+            this.btnExport.Location = new System.Drawing.Point(779, 504);
             this.btnExport.Name = "btnExport";
             this.btnExport.Size = new System.Drawing.Size(87, 34);
             this.btnExport.TabIndex = 7;
@@ -114,11 +115,22 @@
             this.btnExport.UseVisualStyleBackColor = true;
             this.btnExport.Click += new System.EventHandler(this.btnExport_Click);
             // 
+            // btnPart
+            // 
+            this.btnPart.Location = new System.Drawing.Point(930, 504);
+            this.btnPart.Name = "btnPart";
+            this.btnPart.Size = new System.Drawing.Size(87, 34);
+            this.btnPart.TabIndex = 8;
+            this.btnPart.Text = "Participant";
+            this.btnPart.UseVisualStyleBackColor = true;
+            this.btnPart.Click += new System.EventHandler(this.button1_Click);
+            // 
             // ResultPage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1080, 589);
+            this.Controls.Add(this.btnPart);
             this.Controls.Add(this.btnExport);
             this.Controls.Add(this.btnSearch);
             this.Controls.Add(this.lblTo);
@@ -146,6 +158,7 @@
         private System.Windows.Forms.Label lblTo;
         private System.Windows.Forms.Button btnSearch;
         private System.Windows.Forms.Button btnExport;
+        private System.Windows.Forms.Button btnPart;
     }
 }
 

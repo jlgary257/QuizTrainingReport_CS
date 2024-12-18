@@ -32,6 +32,7 @@
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.btnNext = new System.Windows.Forms.Button();
             this.btnAdd_temp = new System.Windows.Forms.Button();
+            this.btnParticipant = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -66,7 +67,7 @@
             // 
             // btnAdd_temp
             // 
-            this.btnAdd_temp.Location = new System.Drawing.Point(650, 439);
+            this.btnAdd_temp.Location = new System.Drawing.Point(444, 439);
             this.btnAdd_temp.Name = "btnAdd_temp";
             this.btnAdd_temp.Size = new System.Drawing.Size(91, 33);
             this.btnAdd_temp.TabIndex = 3;
@@ -74,11 +75,22 @@
             this.btnAdd_temp.UseVisualStyleBackColor = true;
             this.btnAdd_temp.Click += new System.EventHandler(this.btnAdd_temp_Click);
             // 
+            // btnParticipant
+            // 
+            this.btnParticipant.Location = new System.Drawing.Point(627, 439);
+            this.btnParticipant.Name = "btnParticipant";
+            this.btnParticipant.Size = new System.Drawing.Size(91, 33);
+            this.btnParticipant.TabIndex = 4;
+            this.btnParticipant.Text = "Find";
+            this.btnParticipant.UseVisualStyleBackColor = true;
+            this.btnParticipant.Click += new System.EventHandler(this.btnParticipant_Click);
+            // 
             // Participant
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(972, 505);
+            this.Controls.Add(this.btnParticipant);
             this.Controls.Add(this.btnAdd_temp);
             this.Controls.Add(this.btnNext);
             this.Controls.Add(this.dataGridView1);
@@ -97,5 +109,6 @@
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.Button btnNext;
         private System.Windows.Forms.Button btnAdd_temp;
+        private System.Windows.Forms.Button btnParticipant;
     }
 }

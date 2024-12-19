@@ -65,15 +65,35 @@ namespace QuizTrainingReport
 
                 DataTable dataTable = new DataTable();
                 dataTable.Columns.Add("ID");
-                dataTable.Columns.Add("Title");
-                dataTable.Columns.Add("Survey Monkey Link");
+                dataTable.Columns.Add("Name");
+                dataTable.Columns.Add("Email");
 
                 foreach (var result in partResults)
                 {
                     DataRow row = dataTable.NewRow();
                     row["ID"] = result["id"];
-                    row["Title"] = result["title"];
-                    row["Survey Monkey Link"] = result["href"];
+
+                    var pages = result["pages"];
+                    foreach (var page in pages)
+                    {
+                        var questions = page["questions"];
+                        foreach (var question in questions)
+                        {
+                            var answers = question["answers"];
+                            foreach (var answer in answers)
+                            {
+                                if (answer["text"] != null && !answer["text"].ToString().Contains("@"))
+                                {
+                                    row["Name"] = answer["text"];
+                                }
+                                if (answer["text"] != null && answer["text"].ToString().Contains("@"))
+                                {
+                                    row["Email"] = answer["text"];
+                                }
+                            }
+                        }
+                    }
+                   
                     dataTable.Rows.Add(row);
 
                     idList.Add((string)result["id"]);

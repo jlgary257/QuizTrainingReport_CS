@@ -67,6 +67,8 @@ namespace QuizTrainingReport
                 dataTable.Columns.Add("ID");
                 dataTable.Columns.Add("Name");
                 dataTable.Columns.Add("Email");
+                dataTable.Columns.Add("Marks");
+                dataTable.Columns.Add("Percentage");
 
                 foreach (var result in partResults)
                 {
@@ -93,10 +95,19 @@ namespace QuizTrainingReport
                             }
                         }
                     }
-                   
+                    var marks = result["quiz_results"];
+                    if (marks != null)
+                    {
+                        row["Marks"] = marks["score"];
+                        row["Percentage"] = marks["score"].Value<double>() / marks["total_score"].Value<double>() * 100;
+
+                    }
+
                     dataTable.Rows.Add(row);
 
                     idList.Add((string)result["id"]);
+
+                   
                 }
                 static_id_arr.id_ar = idList;
 
@@ -111,6 +122,11 @@ namespace QuizTrainingReport
             {
                 Console.WriteLine($"General error: {ex.Message}");
             }
+        }
+
+        private void btnNext_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
